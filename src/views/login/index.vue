@@ -99,7 +99,7 @@ export default {
         } = await createUserApi(this.mobile, this.code)
         this.$store.commit('SET_TOKEN', token)
         // 跳转到profile
-        this.$router.push('/profile')
+        this.$router.push('/my')
         this.$toast.success('登录成功')
       } catch (error) {
         console.log(error)
