@@ -1,12 +1,20 @@
 <template>
   <div id="app">
-    <h1>黑马头条</h1>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  methods: {
+    //   increement(){
+    //     //不推荐
+    //     // this.$store.state.num +=1
+    //     this.$store.commit('SET_NUM',10)
+    //   }
+    // }
+  }
 }
 </script>
 
