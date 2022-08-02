@@ -12,3 +12,6 @@ export * from './login'
 
 // 引入default
 // export {default as getUser} from "./login"
+
+export * from "./channel"
+export * from "./news"
