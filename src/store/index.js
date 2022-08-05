@@ -25,7 +25,8 @@ export default new Vuex.Store({
       // token存入本地存储
       // 本地存储 操作是JSON格式字符串
       setToken(payload)
-    }
+    },
+    
   },
   actions: {},
   modules: {}

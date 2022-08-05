@@ -6,39 +6,131 @@
       </template>
     </van-nav-bar>
     <van-tabs v-model="active" swipeable>
-      <van-tab v-for="item in list" :key="item.id" :title="item.name">
+      <van-tab v-for="item in myChannels" :key="item.id" :title="item.name">
         <Articlelist :id="item.id"></Articlelist>
       </van-tab>
 
-      <span class="toutiao toutiao-gengduo1"></span>
+      <span class="toutiao toutiao-gengduo1" @click="show = true"></span>
     </van-tabs>
+    <van-popup
+      v-model="show"
+      position="bottom"
+      :style="{ height: '100%' }"
+      closeable
+      close-icon-position="top-left"
+    >
+      <ChannelPopup
+        :myChannels="myChannels"
+        @close="show = false"
+        @change-active="active = $event"
+        @del-channel="delChannel"
+        @add-channel="addChannel"
+      ></ChannelPopup>
+    </van-popup>
   </div>
 </template>
 
 <script>
-import { GetMyChannel as GetMyChannelApi } from '@/Api'
+//$event只存在模板中
+// 原生事件：事件对象
+//自定义事件当中：子组件传递过来的第一个参数
+import {
+  GetMyChannel as GetMyChannelApi,
+  delChannels,
+  addChannel,
+  setMyChannelsToLocal,
+  getMyChannelsByLocal
+} from '@/Api'
 import Articlelist from './components/Articlelist.vue'
+import ChannelPopup from '@/components/ChannelPopup'
 export default {
   name: 'HomeS',
   components: {
-    Articlelist
+    Articlelist,
+    ChannelPopup
   },
   data() {
     return {
       active: 0,
-      list: []
+      myChannels: [],
+      show: false
     }
+  },
+
+  computed: {
+    isLogin() {
+      return !!this.$store.state.tokenobj.token
+    }
+  },
+  created() {
+    this.initMyChannels()
   },
   mounted() {
     this.GetMyChannel()
   },
   methods: {
+    //初始化mychannels数据
+    initMyChannels() {
+      if (this.isLogin) {
+        //登录了
+        //发送请求获取myChannels数据
+        this.GetMyChannel()
+      } else {
+        //未登录
+        const myChannels = getMyChannelsByLocal()
+        //本地存储有myChannels数据，从本地拿
+        if (myChannels) {
+          this.myChannels = myChannels
+        } else {
+          //本地存储没有myChannels数据，获取默认的myChannels
+          this.GetMyChannel()
+        }
+      }
+    },
     async GetMyChannel() {
       try {
         const { data } = await GetMyChannelApi()
-        this.list = data.data.channels
+        this.myChannels = data.data.channels
+        console.log(this.myChannels)
       } catch (e) {
         this.$toast.fail('获取频道失败，请刷新')
+      }
+    },
+    async delChannel(id) {
+      this.$toast.loading({
+        message: '正在删除频道...',
+        forbidClick: true //在删除时页面禁止点击
+      })
+      try {
+        const newChannels = this.myChannels.filter((item) => item.id !== id)
+        if (this.isLogin) {
+          //删除服务器上得数据
+          await delChannels(id)
+        } else {
+          //删除页面上的数据
+          setMyChannelsToLocal(newChannels)
+        }
+        this.myChannels = newChannels
+        this.$toast.success('删除频道成功~')
+      } catch (e) {
+        this.$toast.fail('删除频道失败')
+      }
+    },
+    async addChannel(channel) {
+      this.$toast.loading({
+        message: '正在添加频道...',
+        forbidClick: true //在删除时页面禁止点击
+      })
+      try {
+        if (this.isLogin) {
+          await addChannel(channel.id, this.myChannels.length)
+        } else {
+          setMyChannelsToLocal([...this.myChannels, channel])
+        }
+        this.myChannels.push(channel)
+        this.$toast.success('添加频道成功~')
+      } catch (e) {
+        this.$toast.fail('添加频道失败')
       }
     }
   }
