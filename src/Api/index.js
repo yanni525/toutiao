@@ -15,3 +15,4 @@ export * from './login'
 
 export * from "./channel"
 export * from "./news"
+export * from "./search"
