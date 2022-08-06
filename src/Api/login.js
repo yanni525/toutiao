@@ -21,3 +21,27 @@ export const getCodeApi = (mobile) => {
     url: `/v1_0/sms/codes/${mobile}`
   })
 }
+//获取用户个人信息
+
+export const getUserInfo = () => {
+  return request({
+    url: '/v1_0/user/profile'
+  })
+
+}
+// 编辑用户照片资料（头像、身份证照片）
+//如果传的是对象,axios默认会将对象转成JSON并且加上Content-Type=application/json
+//如果传的是fromData表单，那么axios会将表单提交给后端，并且默认的加上Content-Type=multipart/form-data
+//如果后端要的是from表单
+//const fm = new FormData() 使用FormData，new出来一个实例
+//fm.append('表单的name'，表单项)
+
+export const uploadAvator = (file) => {
+  const fm =new FormData()
+  fm.append('photo', file)
+  return request({
+    url: '/v1_0/user/photo',
+    method:'PATCH',
+    data: fm
+  })
+ }
