@@ -5,13 +5,17 @@
     v-if="articinfo.cover.type === 0"
     :title="articinfo.title"
     :label="label"
+   @click="detalisFn(articinfo)"
   >
+
   </van-cell>
   <!-- 一张图片 -->
   <van-cell
     v-else-if="articinfo.cover.type === 1"
     :title="articinfo.title"
     :label="label"
+   @click="detalisFn(articinfo)"
+
   >
     <div class="right-img">
       <van-image :src="articinfo.cover.images[0]" />
@@ -24,6 +28,8 @@
         v-for="(item, index) in articinfo.cover.images"
         :key="index"
         :src="item"
+      @click="detalisFn(articinfo)"
+
       />
     </div>
   </van-cell>
@@ -45,7 +51,15 @@ export default {
       return `${atr.aut_name} ${atr.comm_count}评论 ${timeAgo(atr.pubdate)}`
     }
   },
-  methods: {}
+  methods: {
+     detalisFn(val){
+      console.log(val);
+        this.$router.push('/detalis')
+        this.$store.commit('SET_DETAILS',val)
+    },
+
+    }
+  
 }
 </script>
 

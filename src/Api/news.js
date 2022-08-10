@@ -32,3 +32,10 @@ export const getArticlrApi = (channelId,timestamp) => {
         }
     })
 }
+
+export const geiDetails = (article_id) => {
+    return request({
+        url: `/v1_0/articles/${article_id}`, 
+    })
+
+}

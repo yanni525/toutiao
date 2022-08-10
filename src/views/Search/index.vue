@@ -2,7 +2,7 @@
   <div>
     <!-- 搜索框 -->
     <!--from的作用：在iOS系统下可以显示搜索按钮  -->
-<form action="/">
+<form class="form-horizontal" action="/">
 <van-search
   v-model.trim="keywords"
   show-action
@@ -36,6 +36,7 @@ export default {
         return{
             keywords:'',
             SearchResult:false,
+            HistList:[]
         }
     },
     methods:{
@@ -44,10 +45,14 @@ export default {
             //如果keywords有值，显示搜索建议
             this.SearchResult=false
         },
-        onSearch(){
-            console.log('正在搜索');
+        onSearch(value){
+            // console.log('正在搜索');
             //用户搜索了显示搜索结果
             this.SearchResult = true;
+            this.keywords = value;
+            this.$store.commit('SET_HISTOY', value)
+            // console.log(this.HistList);
+            // console.log(value);
         },
         // keywords(value){
         //     this.keywords = value;
@@ -76,10 +81,19 @@ export default {
 //搜索框样式
 //属性选择器
 .search{
+  position: sticky;
+  top: 0;
     [role='button']{
     color: #fff;
 
     }
     
+}
+.form-horizontal{
+      position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 99;
 }
 </style>

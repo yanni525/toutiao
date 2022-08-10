@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { setToken, getToken } from '@/utils/auth'
+import { setToken, getToken,getHistory,setHistory,getReplies,setReplies} from '@/utils/auth'
 Vue.use(Vuex)
 // vuex
 // vuex的数据是响应式的，是一个本地仓库，存放数据
@@ -12,7 +12,10 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     // num:0
-    tokenobj: getToken() || {}
+    tokenobj: getToken() || {},
+    history: getHistory()|| [],
+    details:{},
+    replys: getReplies() || {},
   },
   getters: {},
   mutations: {
@@ -26,8 +29,26 @@ export default new Vuex.Store({
       // 本地存储 操作是JSON格式字符串
       setToken(payload)
     },
-    
-  },
+    SET_HISTOY(state, payload) {
+      if (state.history.some(item => item === payload)) state.history=state.history.filter(ele => ele !== payload)
+      if(state.history)
+      state.history.unshift(payload)
+      setHistory(state.history)
+    },
+    DEL_HISTOY(state, payload) { 
+      state.history.filter(ele => ele == payload)
+      setHistory(state.history)
+      },
+    SET_DETAILS(state, details) { 
+      state.details = details
+    },
+    SET_REPLY(state, payload) { 
+      state.replys = payload
+      setReplies(state.replys)
+    }
+
+    },
+ 
   actions: {},
   modules: {}
 })

@@ -4,6 +4,7 @@
   v-for="(item, index) in highlightSuggetionslist"
   :key="index"
     icon="search" 
+    @click="changekeyword(index)"
     >
     <template #title>
         <span v-html="item"></span>
@@ -60,16 +61,19 @@ export default {
                 // this.Suggetionslist = data.data.options.filter((str)=>Boolean(str))
                 //极简
                 this.Suggetionslist = data.data.options.filter(Boolean)
-
+                console.log(this.Suggetionslist);
 
             } catch(e){
                 this.$toast.fail('搜索建议失败')
             }
          },1000),
        
-        // changekeyword(item){
-        //     this.$emit('keywords',item)
-        // },
+        changekeyword(index){  
+        const items = this.Suggetionslist[index]
+        this.$parent.keywords = items
+        this.$parent.SearchResult = true;
+        },
+
     },
     watch:{ 
          keywords:{

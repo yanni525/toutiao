@@ -45,3 +45,19 @@ export const uploadAvator = (file) => {
     data: fm
   })
  }
+
+export const getUserMessage = () => {
+  return request({
+    url: '/v1_0/user',
+
+  })
+ }
+
+export const getUserinfoData = (data) => { 
+  return request({
+    url: '/v1_0/user/profile',
+    method: 'PATCH',
+    data
+  })
+
+}

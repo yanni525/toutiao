@@ -9,3 +9,11 @@ export const getSearchSuggetionsApi = (q) => {
     })
 
 }
+
+export const getSearchApi = (params) => {
+    return request({
+        url: '/v1_0/search',
+        params
+    })
+
+ }

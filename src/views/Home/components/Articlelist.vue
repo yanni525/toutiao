@@ -16,8 +16,10 @@
     <Articleltem 
     v-for="item in articles" 
     :key="item.art_id"
-    :articinfo="item">
+    :articinfo="item"
+    >
     </Articleltem>
+    
     </van-list>
     </van-pull-refresh>
   </div>
@@ -49,6 +51,7 @@ export default {
     this.getArticlrApiList()
   },
   methods: {
+   
     async getArticlrApiList (){
       try {
         const {data} = await getArticlrApi(this.id, +new Date());
@@ -61,7 +64,7 @@ export default {
     },
    async loadNextPageArticle(){
        //加载下一个页面
-       try{
+      try{
     //发请求
     const {data} = await getArticlrApi(this.id, this.pre_timestamp);
     //加载完场后

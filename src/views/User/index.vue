@@ -21,7 +21,7 @@
         @change="selectPhoto"
       />
     </van-cell>
-    <van-popup
+    <van-popup class="ShowAvator"
       v-model="isShowAvator"
       closeable
       :style="{ width: '100%', height: '100%' }"
@@ -32,29 +32,70 @@
       v-if="isShowAvator">
       </UpdateAvator>
     </van-popup>
-    <van-cell title="昵称" :value="UserInfo.name" is-link />
-    <van-cell title="性别" :value="UserInfo.gender===1 ?'女':'男'" is-link />
-    <van-cell title="生日" :value="UserInfo.birthday" is-link />
+
+    <van-cell title="昵称" :value="UserInfo.name" is-link @click="isShowNickName = true"/>
+    <van-popup 
+    v-model="isShowNickName" 
+    position="bottom" 
+    :style="{ height: '100%' }"
+    >
+      <UpdataNickName :name="UserInfo.name" @updata-name="updateName"></UpdataNickName>
+    </van-popup>
+
+
+    <van-cell title="性别" :value="UserInfo.gender ? '女' : '男'" is-link @click="isShowGender = true"/>
+    <van-popup 
+    v-model="isShowGender" 
+    position="bottom" 
+    :style="{ height: '50%' }"
+    >
+    <UpdataGender :gender="UserInfo.gender" @update-genter="updateGender"></UpdataGender>
+    </van-popup>
+
+
+    <van-cell title="生日" :value="UserInfo.birthday" is-link @click="isShowBirthday = true"/>
+      <van-popup 
+    v-model="isShowBirthday" 
+    position="bottom" 
+    :style="{ height: '50%' }"
+    >
+    <UpdataBirthday :birthday="UserInfo.birthday" @update-birthday="updateBirthday "></UpdataBirthday>
+    </van-popup>
   </div>
 </template>
 
 <script>
+import {getUserinfoData} from "@/Api"
 import { getUserInfo } from '@/Api'
 import UpdateAvator from '@/views/User/components/UpdateAvator.vue'
+import UpdataNickName from '@/views/User/components/UpdataNickName.vue'
+import UpdataGender from '@/views/User/components/UpdataGender.vue'
+import UpdataBirthday from '@/views/User/components/UpdataBirthday.vue'
+
 import {resolveToBase64} from "@/utils"
 export default {
   name: 'User',
-  components: { UpdateAvator },
+  components: { UpdateAvator, UpdataNickName ,UpdataGender,UpdataBirthday},
   data() {
     return {
       UserInfo: {},
       isShowAvator: false,
+      isShowNickName:false,
+      isShowGender:false,
+      isShowBirthday:false,
       photo:'',
+      name:"",
+      gender:'',
+      birthday:'',
       isShow:true
     }
   },
   created() {
     this.getUserInfo()
+    
+  },
+  mounted(){
+    // this.getUserData()
   },
   methods: {
     async getUserInfo() {
@@ -103,14 +144,37 @@ export default {
       //展示弹出层
       this.isShowAvator = true
 
+    },
+    async getUserData(){
+      try{
+        const res= await getUserinfoData(this.UserInfo)
+        console.log(res);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    updateName (name) {
+    this.UserInfo.name = name
+
+    this.getUserData()
+    },
+    updateGender(gender){
+      this.UserInfo.gender = gender
+    this.getUserData()
+
+    },
+    updateBirthday(birthday){
+    this.UserInfo.birthday = birthday
+    this.getUserData()
 
     }
-  }
+  },
+
 }
 </script>
 
 <style lang="less" scoped>
-/deep/.van-popup {
+/deep/.ShowAvator {
   position: fixed;
   max-height: 100%;
   overflow-y: auto;

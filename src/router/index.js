@@ -43,6 +43,10 @@ const routes = [
     path: '/user',
     component: () => import('@/views/User')
   },
+  {
+    path: '/detalis',
+    component: () => import('@/components/Detalis')
+  },
 ]
 
 const router = new VueRouter({

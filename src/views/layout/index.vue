@@ -32,9 +32,9 @@ export default {
           text: '问答',
           icon: 'wenda'
         },
-                  {
+          {
           path: '/my',
-          text: '我的',
+          text: this.$store.state.tokenobj ? '我的':'未登录',
           icon: 'wode'
         },
       ]
