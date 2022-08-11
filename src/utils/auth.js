@@ -21,9 +21,9 @@ export const removeHistory = () => Storage.remove(HISTORY)
 
 //评论某个对象
 
-const REPLYS = "REPLYS"
-export const getReplies = () => Storage.get(REPLYS);
+// const REPLYS = "REPLYS"
+// export const getReplies = () => Storage.get(REPLYS);
 
-export const setReplies = (value) => Storage.set(REPLYS, value);
+// export const setReplies = (value) => Storage.set(REPLYS, value);
 
-export const removeReplies = () => Storage.remove(REPLYS);
+// export const removeReplies = () => Storage.remove(REPLYS);

@@ -11,10 +11,9 @@
         <p>{{ detailsList.pubdate }}</p>
       </div>
       <div class="user-right">
-        <van-button round type="info" 
-        :loading="loading"
-        @click="FollowFn"
-        >{{detailsList.is_followed?'已关注':'+ 关注'}} </van-button>
+        <van-button round type="info" :loading="loading" @click="FollowFn"
+          >{{ detailsList.is_followed ? '已关注' : '+ 关注' }}
+        </van-button>
       </div>
     </div>
     <!-- 中间 -->
@@ -26,8 +25,8 @@
     ></div>
     <!-- 正文结束 -->
     <van-divider dashed>正文结束</van-divider>
-    <!-- 评论列表:doneComment="doneComment" -->
-    <ArtComment ></ArtComment>
+    <!-- 评论列表 -->
+    <ArtComment ref="ArtComments"></ArtComment>
     <!-- 底部 -->
     <div class="footer">
       <van-tabbar>
@@ -55,42 +54,24 @@
             <van-icon name="comment-o" />
           </template>
         </van-tabbar-item>
-        <van-tabbar-item 
-        :icon="detailsList.is_collected ?'star':'star-o'" 
-        :class="{
-          linking:detailsList.is_collected
+        <van-tabbar-item
+          :icon="detailsList.is_collected ? 'star' : 'star-o'"
+          :class="{
+            linking: detailsList.is_collected
           }"
-        :loading="loading"
-        @click="onCollet"
+          :loading="loading"
+          @click="onCollet"
         ></van-tabbar-item>
-        <van-tabbar-item 
-        :icon="detailsList.attitude ===1 ?'good-job':'good-job-o'"
-        :class="{
-          attitude:detailsList.attitude === 1
+        <van-tabbar-item
+          :icon="detailsList.attitude === 1 ? 'good-job' : 'good-job-o'"
+          :class="{
+            attitude: detailsList.attitude === 1
           }"
-          @click="AttitudeFn"></van-tabbar-item>
+          @click="AttitudeFn"
+        ></van-tabbar-item>
         <van-tabbar-item icon="share"></van-tabbar-item>
       </van-tabbar>
     </div>
-    <!-- 回复评论 -->
-      <van-overlay :show="show">
-          <div class="wrapper">
-            <van-field
-              v-model="message"
-              rows="2"
-              focus
-              autosize
-              type="textarea"
-              maxlength="50"
-              placeholder="请输入留言"
-              show-word-limit
-            >
-            </van-field>
-            <div class="right-btn" @click="show = false">
-              <button @click="SendComment(detailsList.art_id)">发送</button>
-            </div>
-          </div>
-        </van-overlay>
   </div>
 </template>
 
@@ -98,7 +79,16 @@
 import { ImagePreview } from 'vant'
 import 'github-markdown-css/github-markdown.css'
 import { mapState } from 'vuex'
-import { geiDetails,getCollect ,getOffCollet ,getFollow,getOffFollow,getLink,getOnLink,getSendComment} from '@/Api'
+import {
+  geiDetails,
+  getCollect,
+  getOffCollet,
+  getFollow,
+  getOffFollow,
+  getLink,
+  getOnLink,
+  getSendComment
+} from '@/Api'
 import ArtComment from './ArtComment.vue'
 
 export default {
@@ -111,8 +101,7 @@ export default {
       collect: false,
       message: '',
       show: false,
-      detailsList: {},
-      doneComment:[]
+      detailsList: {}
     }
   },
   created() {
@@ -138,75 +127,77 @@ export default {
         imgList.push(img.src)
         img.onclick = () => {
           ImagePreview({
-            imgList ,
+            imgList,
             startPosition: index
           })
         }
       })
     },
-   async onCollet(){
-      try{
-        if(this.detailsList.is_collected){
+    async onCollet() {
+      try {
+        if (this.detailsList.is_collected) {
           await getOffCollet(this.details.art_id)
-        }else{
+        } else {
           await getCollect(this.details.art_id)
         }
         //更新视图
         this.detailsList.is_collected = !this.detailsList.is_collected
-        this.$toast.success(this.detailsList.is_collected ?'收藏成功':'取消收藏')
+        this.$toast.success(
+          this.detailsList.is_collected ? '收藏成功' : '取消收藏'
+        )
       } catch (e) {
         this.$toast.fail('重新加载，请稍后')
       }
     },
-    async FollowFn(){
-      try{
-        if(this.detailsList.is_followed===true){
+    async FollowFn() {
+      try {
+        if (this.detailsList.is_followed === true) {
           await getOffFollow(this.details.art_id)
-        } else{
+        } else {
           await getFollow(this.details.art_id)
         }
         this.detailsList.is_followed = !this.detailsList.is_followed
-        this.$toast.success(this.detailsList.is_followed ?'关注成功':'取消关注')
-      }catch (e) {
+        this.$toast.success(
+          this.detailsList.is_followed ? '关注成功' : '取消关注'
+        )
+      } catch (e) {
         this.$toast.fail('请刷新重新操作')
       }
     },
-    async AttitudeFn(){
-      try{
+    async AttitudeFn() {
+      try {
         let state = -1
-        if(this.detailsList.attitude === 1){
+        if (this.detailsList.attitude === 1) {
           await getOnLink(this.details.art_id)
-        }else{
+        } else {
           await getLink(this.details.art_id)
           state = 1
         }
         this.detailsList.attitude = state
+        this.$toast.success(this.detailsList.attitude === 1?'点赞成功':'取消点赞')
       } catch (e) {
         this.$toast.fail('请刷新重试')
       }
     },
-    async SendComment(val){
-      try{
-        const {data} =await getSendComment({
-          target:val,
-          content:this.message,
-          art_id:null
+    async SendComment(val) {
+      try {
+        const { data } = await getSendComment({
+          target: val,
+          content: this.message,
+          art_id: null
         })
-        this.doneComment= data.data
-        console.log(this.doneComment);
+        this.$refs['ArtComments'].comments.unshift(data.data.new_obj)
+        console.log(this.doneComment)
         this.$toast.success('发布评论成功')
       } catch (e) {
         this.$toast.fail('请刷新重试')
       }
     }
-
   },
   computed: {
-    ...mapState(['details']),
-    ...mapState(['replys'])
+    ...mapState(['details'])
   }
 }
-
 </script>
 
 <style lang="less" scoped>
@@ -319,11 +310,10 @@ export default {
 /deep/.van-tabbar-item--active {
   color: unset;
 }
-/deep/.linking{
-  color:#3296fa;
+/deep/.linking {
+  color: #3296fa;
 }
-/deep/.attitude{
-  color:#3296fa;
-  
+/deep/.attitude {
+  color: #3296fa;
 }
 </style>

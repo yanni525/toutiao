@@ -47,6 +47,7 @@ const routes = [
     path: '/detalis',
     component: () => import('@/components/Detalis')
   },
+  
 ]
 
 const router = new VueRouter({

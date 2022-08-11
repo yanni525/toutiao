@@ -14,12 +14,28 @@
             
               <van-button @click="$router.push('/user')">编辑资料</van-button>
             </div>
-          <div class="user-data">
-          <div>头条{{UserList.art_count}}</div>
-          <div>粉丝{{UserList.fans_count}}</div>
-          <div>关注{{UserList.follow_count}}</div>
-          <div >获赞{{UserList.like_count}}</div>
-          </div>
+          <van-grid>
+          <van-grid-item text="头条" >
+          <template #icon>
+          {{UserList.art_count}}
+          </template>
+          </van-grid-item>
+          <van-grid-item text="粉丝">
+           <template #icon>
+          {{UserList.fans_count}}
+          </template>
+          </van-grid-item>
+          <van-grid-item text="关注" >
+          <template #icon>
+          {{UserList.follow_count}}
+          </template>
+          </van-grid-item>
+          <van-grid-item  text="获赞" >
+          <template #icon>
+          {{UserList.like_count}}
+          </template>
+          </van-grid-item>
+          </van-grid>
           </div>
       </div>
       <div class="loginout" v-else>
@@ -152,24 +168,35 @@ top: 0;
     }
     }
     .van-button{
-    width: 1.53333rem;
-    height: .42667rem;
+    width: 2rem;
+    height: .6rem;
     background: #fff;
-    border-radius: .21333rem;
-    font-size: .26667rem;
+    border-radius: .51333rem;
     color: #666;
     padding: 0;
-    font-size:14px;
+    font-size:20px;
 
     }
-    .user-data{
+    /deep/.van-grid {
     width: 100%;
     height: 2.08rem;
-    display: flex;
-    justify-content:space-around;
-    align-items: center;
-    font-size:14px;
-    color:#fff;
+      &::after{
+        border: none;
+      }
+    
+    
+    .van-grid-item__content {
+      background-color: transparent;
+      border: none;
+    font-size: 30px;
+    color: #fff;
+      &::after {
+        border: none;
+      }
+    }
+    .van-grid-item__text{
+      color: #fff;
+    }
     }
 }
 .loginout{

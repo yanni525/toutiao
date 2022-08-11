@@ -7,7 +7,7 @@
   finished-text="没有更多了"
   @load="onLoad"
 >
- <ArtComList :list="comments"></ArtComList>
+ <ArtComList :list="comments" ></ArtComList>
 </van-list>
   </div>
 </template>
@@ -17,6 +17,7 @@ import { getComment } from '@/Api'
 import { mapState } from 'vuex'
 import  ArtComList from './ArtComList.vue'
 export default {
+
     components: { ArtComList },
   data() {
     return {
@@ -27,7 +28,6 @@ export default {
   },
   methods: {
     async onLoad () {
-      this.loading = true
       try {
         const {data} = await getComment({
           type: 'a',
@@ -35,9 +35,6 @@ export default {
         })
         
         this.comments = data.data.results
-        // this.comments.push(doneComment)
-        console.log(this.comments);
-        this.loading = false
         if(this.comments){
           this.finished = true
         }
